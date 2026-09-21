@@ -4,18 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PeaVee Gallery</title>
-  <!-- Font Awesome for UI Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <style>
 
+  <style>
 
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        
-        /* COLORS */
+
         --text: #333;
         --bg1: #f5f5f5;
         --bg2: #ffffff;
@@ -24,6 +21,8 @@
         --border: #333;
         --link: #333;
         --underline: #999;
+        --checker-a: #e2e2e2;
+        --checker-b: #cfcfcf;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -36,10 +35,10 @@
             --border: #000;
             --link: #DADADB;
             --underline: #888;
+            --checker-a: #3a3a3a;
+            --checker-b: #2e2e2e;
         }
     }
-
-
 
     :root {
         --header: system-ui, -apple-system, sans-serif;
@@ -49,7 +48,6 @@
         --h1-letter-spacing: .5px;
         --h1-weight: normal;
     }
-
 
     body {
         position: relative;
@@ -65,13 +63,10 @@
         background-attachment: fixed;
     }
 
-    /* Pixel art crispness */
     img {
         image-rendering: pixelated;
         image-rendering: crisp-edges;
     }
-
- 
 
     h1, h2, h3 {
         font-family: var(--header);
@@ -93,7 +88,7 @@
         color: var(--text);
         font-family: var(--header);
         letter-spacing: var(--h1-letter-spacing);
-        font-weight: normal; 
+        font-weight: normal;
     }
 
     ul {
@@ -113,8 +108,6 @@
     small {
         font-size: .85em;
     }
-
-
 
     #header {
         width: 100%;
@@ -166,7 +159,6 @@
         font-size: 1.2rem;
     }
 
-
     .box {
         font-size: 0.95rem;
         padding: 0.85rem;
@@ -183,7 +175,6 @@
         background: var(--h1-bg);
         color: var(--h1-text);
     }
-
 
     .unified-dashboard {
         max-width: 44rem !important;
@@ -202,7 +193,6 @@
         grid-column: span 2;
     }
 
-    /* Filter Toolbar */
     .filter-toolbar {
         display: flex;
         flex-wrap: wrap;
@@ -233,12 +223,19 @@
 
     .art-image {
         border-bottom: var(--border-style);
-        background: var(--bg1);
         display: flex;
         align-items: center;
         justify-content: center;
         overflow: hidden;
         aspect-ratio: 1 / 1;
+        background-image:
+          linear-gradient(45deg, var(--checker-a) 25%, transparent 25%),
+          linear-gradient(-45deg, var(--checker-a) 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, var(--checker-a) 75%),
+          linear-gradient(-45deg, transparent 75%, var(--checker-a) 75%);
+        background-color: var(--checker-b);
+        background-size: 16px 16px;
+        background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
     }
 
     .art-image img {
@@ -275,8 +272,6 @@
         font-size: .7rem;
     }
 
-
-
     .btn {
         display: inline-block;
         padding: .4rem .85rem;
@@ -305,8 +300,6 @@
         color: var(--bg2);
     }
 
-
-
     .modal-overlay {
         position: fixed;
         inset: 0;
@@ -329,19 +322,91 @@
     }
 
     .modal-image-container {
-        background: var(--bg1);
+        position: relative;
         border-bottom: var(--border-style);
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 1rem;
         max-height: 60vh;
+        overflow: hidden;
+        background-image:
+          linear-gradient(45deg, var(--checker-a) 25%, transparent 25%),
+          linear-gradient(-45deg, var(--checker-a) 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, var(--checker-a) 75%),
+          linear-gradient(-45deg, transparent 75%, var(--checker-a) 75%);
+        background-color: var(--checker-b);
+        background-size: 16px 16px;
+        background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
     }
 
     .modal-image-container img {
         max-height: 50vh;
         max-width: 100%;
         object-fit: contain;
+        transition: opacity 0.15s ease;
+    }
+
+    .modal-image-container.loading img {
+        opacity: 0;
+    }
+
+    .modal-loading-spinner {
+        position: absolute;
+        width: 28px;
+        height: 28px;
+        border: 3px solid var(--underline);
+        border-top-color: var(--border);
+        border-radius: 50%;
+        animation: modal-spin 0.7s linear infinite;
+        display: none;
+    }
+
+    .modal-image-container.loading .modal-loading-spinner {
+        display: block;
+    }
+
+    @keyframes modal-spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .modal-thumb-strip {
+        display: flex;
+        gap: 0.4rem;
+        margin-top: 0.6rem;
+        overflow-x: auto;
+        padding-bottom: 0.15rem;
+    }
+
+    .modal-thumb {
+        flex: 0 0 auto;
+        width: 44px;
+        height: 44px;
+        border: var(--border-style);
+        cursor: pointer;
+        overflow: hidden;
+        opacity: 0.5;
+        background-image:
+          linear-gradient(45deg, var(--checker-a) 25%, transparent 25%),
+          linear-gradient(-45deg, var(--checker-a) 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, var(--checker-a) 75%),
+          linear-gradient(-45deg, transparent 75%, var(--checker-a) 75%);
+        background-color: var(--checker-b);
+        background-size: 10px 10px;
+        background-position: 0 0, 0 5px, 5px -5px, -5px 0px;
+    }
+
+    .modal-thumb.current {
+        opacity: 1;
+        outline: 2px solid var(--border);
+        outline-offset: -2px;
+    }
+
+    .modal-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
     }
 
     .modal-close {
@@ -355,7 +420,28 @@
         color: var(--h1-text);
     }
 
+    .modal-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--bg2);
+        border: var(--border-style);
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        filter: var(--drop-shadow-style);
+    }
 
+    .modal-nav.prev {
+        left: -1.1rem;
+    }
+
+    .modal-nav.next {
+        right: -1.1rem;
+    }
 
     footer {
         background: var(--h1-bg);
@@ -411,8 +497,6 @@
         pointer-events: auto;
     }
 
-
-
     @media (max-width: 768px) {
         .mobile-menu-btn {
             display: block;
@@ -443,6 +527,14 @@
         .nav-links a {
             padding: .5rem 0;
             border-bottom: var(--border-style);
+        }
+
+        .modal-nav.prev {
+            left: 0.5rem;
+        }
+
+        .modal-nav.next {
+            right: 0.5rem;
         }
     }
 
@@ -481,11 +573,9 @@
     </div>
   </header>
 
-  <!-- MAIN CONTAINER -->
   <main class="unified-dashboard">
     <div class="grid-layout">
 
-      <!-- HERO / ABOUT BOX -->
       <section id="about" class="box span-full">
         <h1>Pixel Art Gallery</h1>
         <p>Welcome! This is a curated showcase of my pixel artwork, game sprites, and retro illustrations. I also take commissions for custom pieces and character work.</p>
@@ -496,7 +586,6 @@
         <div class="gallery-grid" id="galleryGrid"></div>
       </section>
 
-      <!-- CONTACT BOX -->
       <section id="contact" class="box span-full">
         <h2>Contact & Links</h2>
         <div class="contact-item">
@@ -507,21 +596,27 @@
     </div>
   </main>
 
-  <!-- LIGHTBOX MODAL -->
   <div class="modal-overlay" id="artModal" onclick="closeModalOnBg(event)">
     <div class="box modal-box">
       <button class="modal-close" onclick="closeModal()">&times;</button>
       <h3 id="modalTitle">Artwork Title</h3>
+      <div class="modal-nav prev" onclick="showImageAt(currentIndex - 1)">
+        <i class="fa-solid fa-chevron-left"></i>
+      </div>
       <div class="modal-image-container">
+        <div class="modal-loading-spinner"></div>
         <img id="modalImg" src="" alt="Artwork Large View">
       </div>
+      <div class="modal-nav next" onclick="showImageAt(currentIndex + 1)">
+        <i class="fa-solid fa-chevron-right"></i>
+      </div>
+      <div class="modal-thumb-strip" id="modalThumbStrip"></div>
       <div style="margin-top: 0.5rem;">
         <div class="art-tags" id="modalTags"></div>
       </div>
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer>
     <div class="footer-content">
       <div class="footer-links">
@@ -580,6 +675,10 @@
         title: 'Potryx'
       },
       {
+        src: 'assets/Potryx-Gameboy-Sprite.png',
+        title: 'Potryx gba style'
+      },
+      {
         src: 'assets/Sableye.png',
         title: 'Sableye'
       },
@@ -593,14 +692,16 @@
       }
     ];
 
+    let currentIndex = 0;
+
     function renderGallery() {
       const galleryGrid = document.getElementById('galleryGrid');
       galleryGrid.innerHTML = '';
 
-      galleryItems.forEach((item) => {
+      galleryItems.forEach((item, index) => {
         const card = document.createElement('div');
         card.className = 'art-card';
-        card.onclick = () => openModal(item.src, item.title);
+        card.onclick = () => openModal(index);
 
         const imageWrapper = document.createElement('div');
         imageWrapper.className = 'art-image';
@@ -608,6 +709,7 @@
         const image = document.createElement('img');
         image.src = item.src;
         image.alt = item.title;
+        image.loading = 'lazy';
 
         imageWrapper.appendChild(image);
 
@@ -649,11 +751,67 @@
       });
     }
 
-    // Lightbox Modal Functions
-    function openModal(imgSrc, title) {
-      document.getElementById('modalImg').src = imgSrc;
-      document.getElementById('modalTitle').innerText = title;
+    function fitPixelImage(img) {
+      const container = document.querySelector('.modal-image-container');
+      if (!container || !img.naturalWidth || !img.naturalHeight) return;
+      const availW = container.clientWidth - 32;
+      const availH = window.innerHeight * 0.5 - 32;
+      const nw = img.naturalWidth;
+      const nh = img.naturalHeight;
+      let scale = Math.floor(Math.min(availW / nw, availH / nh));
+      if (scale < 1) {
+        scale = Math.min(availW / nw, availH / nh);
+      }
+      img.style.width = (nw * scale) + 'px';
+      img.style.height = (nh * scale) + 'px';
+    }
+
+    function renderThumbStrip() {
+      const strip = document.getElementById('modalThumbStrip');
+      strip.innerHTML = '';
+      const total = galleryItems.length;
+      const range = 2;
+      for (let offset = -range; offset <= range; offset++) {
+        const idx = (currentIndex + offset + total) % total;
+        const item = galleryItems[idx];
+        const thumb = document.createElement('div');
+        thumb.className = 'modal-thumb' + (offset === 0 ? ' current' : '');
+        thumb.onclick = (e) => {
+          e.stopPropagation();
+          showImageAt(idx);
+        };
+        const thumbImg = document.createElement('img');
+        thumbImg.src = item.src;
+        thumbImg.alt = item.title;
+        thumb.appendChild(thumbImg);
+        strip.appendChild(thumb);
+      }
+    }
+
+    function loadModalImage() {
+      const item = galleryItems[currentIndex];
+      const container = document.querySelector('.modal-image-container');
+      const img = document.getElementById('modalImg');
+      container.classList.add('loading');
+      img.onload = () => {
+        container.classList.remove('loading');
+        fitPixelImage(img);
+      };
+      img.src = item.src;
+      document.getElementById('modalTitle').innerText = item.title;
+      renderThumbStrip();
+    }
+
+    function openModal(index) {
+      currentIndex = index;
+      loadModalImage();
       document.getElementById('artModal').classList.add('open');
+    }
+
+    function showImageAt(index) {
+      const total = galleryItems.length;
+      currentIndex = (index + total) % total;
+      loadModalImage();
     }
 
     function closeModal() {
@@ -666,9 +824,40 @@
       }
     }
 
+    document.addEventListener('keydown', (e) => {
+      if (!document.getElementById('artModal').classList.contains('open')) return;
+      if (e.key === 'ArrowRight') showImageAt(currentIndex + 1);
+      if (e.key === 'ArrowLeft') showImageAt(currentIndex - 1);
+      if (e.key === 'Escape') closeModal();
+    });
+
+    window.addEventListener('resize', () => {
+      if (document.getElementById('artModal').classList.contains('open')) {
+        fitPixelImage(document.getElementById('modalImg'));
+      }
+    });
+
+    (function() {
+      const modalImageContainer = document.querySelector('.modal-image-container');
+      let touchStartX = 0;
+      modalImageContainer.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].clientX;
+      });
+      modalImageContainer.addEventListener('touchend', (e) => {
+        const touchEndX = e.changedTouches[0].clientX;
+        const delta = touchEndX - touchStartX;
+        if (Math.abs(delta) > 50) {
+          if (delta < 0) {
+            showImageAt(currentIndex + 1);
+          } else {
+            showImageAt(currentIndex - 1);
+          }
+        }
+      });
+    })();
+
     renderGallery();
 
-    // Back to Top Button
     const backToTopBtn = document.getElementById('backToTop');
     window.addEventListener('scroll', () => {
       if (window.scrollY > 300) {
