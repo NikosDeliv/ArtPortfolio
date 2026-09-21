@@ -241,7 +241,7 @@
     .art-image img {
         width: 100%;
         height: 100%;
-        object-fit: contain;
+        object-fit: cover;
         display: block;
     }
 
@@ -330,14 +330,7 @@
         padding: 1rem;
         max-height: 60vh;
         overflow: hidden;
-        background-image:
-          linear-gradient(45deg, var(--checker-a) 25%, transparent 25%),
-          linear-gradient(-45deg, var(--checker-a) 25%, transparent 25%),
-          linear-gradient(45deg, transparent 75%, var(--checker-a) 75%),
-          linear-gradient(-45deg, transparent 75%, var(--checker-a) 75%);
-        background-color: var(--checker-b);
-        background-size: 16px 16px;
-        background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+        background: var(--bg1);
     }
 
     .modal-image-container img {
@@ -758,10 +751,7 @@
       const availH = window.innerHeight * 0.5 - 32;
       const nw = img.naturalWidth;
       const nh = img.naturalHeight;
-      let scale = Math.floor(Math.min(availW / nw, availH / nh));
-      if (scale < 1) {
-        scale = Math.min(availW / nw, availH / nh);
-      }
+      const scale = Math.min(availW / nw, availH / nh);
       img.style.width = (nw * scale) + 'px';
       img.style.height = (nh * scale) + 'px';
     }
